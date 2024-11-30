@@ -57,9 +57,11 @@
         const spinner = document.getElementById("spinner");
         const result = document.getElementById("result");
         const overpassQuerySection = document.getElementById("overpassQuery");
+        const overpassLabel = document.getElementById("overpassLabel");
         spinner.style.display = "block";
         result.textContent = "";
         overpassQuerySection.textContent = "";
+        overpassLabel.textContent = "";
 
         try {
           const response = await fetch(endpoint);
@@ -69,9 +71,11 @@
             );
           }
           const data = await response.json();
-          result.textContent = `${data.length} meters of powerline in total`;
+          const lengthInKm = (data.length / 1000).toFixed(3);
+          result.textContent = `${lengthInKm} kilometers of powerline in total`;
 
           if (data.overpass_query) {
+            overpassLabel.textContent = "Overpass Query used:";
             overpassQuerySection.textContent = data.overpass_query;
           }
         } catch (error) {
@@ -117,6 +121,8 @@
 
     <div id="spinner"></div>
     <p id="result"></p>
+
+    <p id="overpassLabel"></p>
     <pre id="overpassQuery"></pre>
   </body>
 </html>
