@@ -23,6 +23,14 @@
           transform: rotate(360deg);
         }
       }
+      code {
+        display: block;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        background-color: #f4f4f4;
+        padding: 1em;
+        border: 1px solid #ddd;
+      }
     </style>
     <script>
       function setDefaultDate() {
@@ -48,8 +56,10 @@
 
         const spinner = document.getElementById("spinner");
         const result = document.getElementById("result");
+        const overpassQuerySection = document.getElementById("overpassQuery");
         spinner.style.display = "block";
         result.textContent = "";
+        overpassQuerySection.textContent = "";
 
         try {
           const response = await fetch(endpoint);
@@ -60,6 +70,10 @@
           }
           const data = await response.json();
           result.textContent = `${data.length} meters of powerline in total`;
+
+          if (data.overpass_query) {
+            overpassQuerySection.textContent = data.overpass_query;
+          }
         } catch (error) {
           result.textContent = `Failed to fetch data: ${error.message}`;
         } finally {
@@ -84,7 +98,7 @@
         target="_blank"
         >minor_lines</a
       >
-      touching relation at timestamp
+      within relation at timestamp
     </h1>
     <form id="dataForm" onsubmit="fetchData(event)">
       <label for="relationId">Relation ID:</label><br />
@@ -103,5 +117,6 @@
 
     <div id="spinner"></div>
     <p id="result"></p>
+    <pre id="overpassQuery"></pre>
   </body>
 </html>
