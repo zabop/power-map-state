@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sum Length at Date</title>
+    <script>
+      function setDefaultDate() {
+        const now = new Date();
+        const formattedDate = now.toISOString().slice(0, 16);
+        document.getElementById("date").value = formattedDate;
+      }
+
+      async function fetchData(event) {
+        event.preventDefault();
+        const relationId = document.getElementById("relationId").value;
+        const date = document.getElementById("date").value;
+
+        if (!relationId || !date) {
+          alert("Please fill in both Relation ID and Date");
+          return;
+        }
+
+        const endpoint = `https://power-map-state.fly.dev/sum_length_at_date/?relationId=${relationId}&date=${encodeURIComponent(
+          date
+        )}`;
+
+        try {
+          const response = await fetch(endpoint);
+          if (!response.ok) {
+            throw new Error(
+              `Error: ${response.status} - ${response.statusText}`
+            );
+          }
+          const result = await response.json();
+          document.getElementById("result").textContent = JSON.stringify(
+            result,
+            null,
+            2
+          );
+        } catch (error) {
+          document.getElementById(
+            "result"
+          ).textContent = `Failed to fetch data: ${error.message}`;
+        }
+      }
+
+      window.onload = setDefaultDate;
+    </script>
+  </head>
+  <body>
+    <h1>
+      Total length of
+      <a
+        href="https://wiki.openstreetmap.org/wiki/Tag:power%3Dline"
+        target="_blank"
+        >lines</a
+      >
+      and
+      <a
+        href="https://wiki.openstreetmap.org/wiki/Tag:power%3Dminor_line"
+        target="_blank"
+        >minor_lines</a
+      >
+      within relation at timestamp
+    </h1>
+    <form id="dataForm" onsubmit="fetchData(event)">
+      <label for="relationId">Relation ID:</label><br />
+      <input
+        type="text"
+        id="relationId"
+        name="relationId"
+        required
+      /><br /><br />
+
+      <label for="date">UTC timestamp:</label><br />
+      <input type="datetime-local" id="date" name="date" required /><br /><br />
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <h2>Result:</h2>
+    <pre
+      id="result"
+      style="background: #f4f4f4; padding: 1em; border: 1px solid #ddd"
+    ></pre>
+  </body>
+</html>
