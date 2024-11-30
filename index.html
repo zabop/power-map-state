@@ -56,12 +56,10 @@
 
         const spinner = document.getElementById("spinner");
         const result = document.getElementById("result");
-        const overpassQuerySection = document.getElementById("overpassQuery");
-        const overpassLabel = document.getElementById("overpassLabel");
+        const overpassQueryLink = document.getElementById("overpassQueryLink");
         spinner.style.display = "block";
         result.textContent = "";
-        overpassQuerySection.textContent = "";
-        overpassLabel.textContent = "";
+        overpassQueryLink.textContent = "";
 
         try {
           const response = await fetch(endpoint);
@@ -75,8 +73,9 @@
           result.innerHTML = `<b>${lengthInKm} kilometers of powerlines in total.</b>`;
 
           if (data.overpass_query) {
-            overpassLabel.textContent = "Overpass Query used:";
-            overpassQuerySection.textContent = data.overpass_query;
+            overpassQueryLink.textContent = "Overpass Query used";
+            overpassQueryLink.href = data.overpass_query;
+            overpassQueryLink.target = "_blank";
           }
         } catch (error) {
           result.textContent = `Failed to fetch data: ${error.message}`;
@@ -121,8 +120,6 @@
 
     <div id="spinner"></div>
     <p id="result"></p>
-
-    <p id="overpassLabel"></p>
-    <pre id="overpassQuery"></pre>
+    <a id="overpassQueryLink" href="#" target="_blank"></a>
   </body>
 </html>
