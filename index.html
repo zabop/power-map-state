@@ -4,11 +4,31 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sum Length at Date</title>
+    <style>
+      #spinner {
+        display: none;
+        margin-top: 10px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
     <script>
       function setDefaultDate() {
         const now = new Date();
-        const formattedDate = now.toISOString().slice(0, 19); // Include seconds in the format
-        document.getElementById("date").value = formattedDate.slice(0, 16); // Remove seconds part for datetime-local
+        const formattedDate = now.toISOString().slice(0, 19);
+        document.getElementById("date").value = formattedDate.slice(0, 16);
       }
 
       async function fetchData(event) {
@@ -21,10 +41,15 @@
           return;
         }
 
-        const date = `${dateInput}:00Z`; // Format the date as YYYY-MM-DDTHH:MM:SSZ
+        const date = `${dateInput}:00Z`;
         const endpoint = `https://power-map-state.fly.dev/sum_length_at_date/?relationId=${relationId}&date=${encodeURIComponent(
           date
         )}`;
+
+        const spinner = document.getElementById("spinner");
+        const result = document.getElementById("result");
+        spinner.style.display = "block";
+        result.textContent = "";
 
         try {
           const response = await fetch(endpoint);
@@ -33,16 +58,12 @@
               `Error: ${response.status} - ${response.statusText}`
             );
           }
-          const result = await response.json();
-          document.getElementById("result").textContent = JSON.stringify(
-            result,
-            null,
-            2
-          );
+          const data = await response.json();
+          result.textContent = `${data.result} meters of powerline in total`;
         } catch (error) {
-          document.getElementById(
-            "result"
-          ).textContent = `Failed to fetch data: ${error.message}`;
+          result.textContent = `Failed to fetch data: ${error.message}`;
+        } finally {
+          spinner.style.display = "none";
         }
       }
 
@@ -80,10 +101,8 @@
       <button type="submit">Submit</button>
     </form>
 
+    <div id="spinner"></div>
     <h2>Result:</h2>
-    <pre
-      id="result"
-      style="background: #f4f4f4; padding: 1em; border: 1px solid #ddd"
-    ></pre>
+    <p id="result"></p>
   </body>
 </html>
