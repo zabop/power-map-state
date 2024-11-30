@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from xml.etree import ElementTree as ET
 import geopandas as gpd
 import shapely.geometry
+import urllib.parse
 import requests
 
 app = FastAPI()
@@ -54,4 +55,4 @@ async def sum_length_at_date(relationId: int, date: str):
 
     gdf = gpd.GeoDataFrame(geometry=ways).set_crs("4326")
     gdf = gdf.to_crs(gdf.estimate_utm_crs())
-    return {"length": int(gdf.geometry.length.sum()), "overpass_query": query}
+    return {"length": int(gdf.geometry.length.sum()), "overpass_query": "http://overpass-turbo.eu/?Q="+urllib.parse.quote(query)}
