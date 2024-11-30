@@ -7,8 +7,8 @@
     <script>
       function setDefaultDate() {
         const now = new Date();
-        const formattedDate = now.toISOString().slice(0, 16);
-        document.getElementById("date").value = formattedDate;
+        const formattedDate = now.toISOString().slice(0, 19); // Include seconds in the format
+        document.getElementById("date").value = formattedDate.slice(0, 16); // Remove seconds part for datetime-local
       }
 
       async function fetchData(event) {
@@ -21,7 +21,7 @@
           return;
         }
 
-        const date = `${dateInput}:00Z`;
+        const date = `${dateInput}:00Z`; // Format the date as YYYY-MM-DDTHH:MM:SSZ
         const endpoint = `https://power-map-state.fly.dev/sum_length_at_date/?relationId=${relationId}&date=${encodeURIComponent(
           date
         )}`;
