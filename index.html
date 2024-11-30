@@ -72,7 +72,7 @@
           }
           const data = await response.json();
           const lengthInKm = (data.length / 1000).toFixed(3);
-          result.textContent = `${lengthInKm} kilometers of powerline in total`;
+          result.textContent = `<b>${lengthInKm} kilometers of powerline in total</b>`;
 
           if (data.overpass_query) {
             overpassLabel.textContent = "Overpass Query used:";
