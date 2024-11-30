@@ -14,13 +14,14 @@
       async function fetchData(event) {
         event.preventDefault();
         const relationId = document.getElementById("relationId").value;
-        const date = document.getElementById("date").value;
+        const dateInput = document.getElementById("date").value;
 
-        if (!relationId || !date) {
+        if (!relationId || !dateInput) {
           alert("Please fill in both Relation ID and Date");
           return;
         }
 
+        const date = `${dateInput}:00Z`;
         const endpoint = `https://power-map-state.fly.dev/sum_length_at_date/?relationId=${relationId}&date=${encodeURIComponent(
           date
         )}`;
