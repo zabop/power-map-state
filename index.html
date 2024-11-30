@@ -59,7 +59,7 @@
             );
           }
           const data = await response.json();
-          result.textContent = `${data.result} meters of powerline in total`;
+          result.textContent = `${data.length} meters of powerline in total`;
         } catch (error) {
           result.textContent = `Failed to fetch data: ${error.message}`;
         } finally {
@@ -102,7 +102,6 @@
     </form>
 
     <div id="spinner"></div>
-    <h2>Result:</h2>
     <p id="result"></p>
   </body>
 </html>
